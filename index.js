@@ -63,6 +63,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(compression());
 
+// Trust the reverse proxy (Render) so rate limiters see the real client IPs
+app.set('trust proxy', 1);
+
 // General Rate Limiter
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
