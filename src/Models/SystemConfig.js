@@ -16,6 +16,10 @@ const SystemConfigSchema = new mongoose.Schema({
   totalQuestionsToServe: {
     type: Number,
     default: 30
+  },
+  testDuration: {
+    type: Number,
+    default: 15 // Default 15 minutes
   }
 }, {
   timestamps: true

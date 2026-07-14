@@ -22,7 +22,7 @@ const getConfig = async (req, res) => {
 // @access  Private/Staff or Admin
 const updateConfig = async (req, res) => {
   try {
-    const { testActive, shuffleQuestions, shuffleOptions, totalQuestionsToServe } = req.body;
+    const { testActive, shuffleQuestions, shuffleOptions, totalQuestionsToServe, testDuration } = req.body;
     
     let config = await SystemConfig.findOne();
     if (!config) {
@@ -35,12 +35,13 @@ const updateConfig = async (req, res) => {
       if (shuffleQuestions !== undefined) config.shuffleQuestions = shuffleQuestions;
       if (shuffleOptions !== undefined) config.shuffleOptions = shuffleOptions;
       if (totalQuestionsToServe !== undefined) config.totalQuestionsToServe = Number(totalQuestionsToServe);
+      if (testDuration !== undefined) config.testDuration = Number(testDuration);
     } else if (req.user.role === 'Staff') {
       // Staff cannot toggle testActive, only shuffle options/questions as requested
       if (shuffleQuestions !== undefined) config.shuffleQuestions = shuffleQuestions;
       if (shuffleOptions !== undefined) config.shuffleOptions = shuffleOptions;
-      if (testActive !== undefined || totalQuestionsToServe !== undefined) {
-        return res.status(403).json({ message: 'Access denied: Staff cannot change test active status or questions count' });
+      if (testActive !== undefined || totalQuestionsToServe !== undefined || testDuration !== undefined) {
+        return res.status(403).json({ message: 'Access denied: Staff cannot change test active status, questions count, or test duration' });
       }
     }
 
