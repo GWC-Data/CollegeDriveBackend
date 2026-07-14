@@ -46,9 +46,15 @@ app.use(cors({
     if (!origin) return callback(null, true);
     // Normalize origin to compare
     const normalizedOrigin = origin.replace(/\/$/, '');
-    if (allowedOrigins.includes(normalizedOrigin)) {
+    
+    if (
+      allowedOrigins.includes(normalizedOrigin) || 
+      normalizedOrigin.endsWith('.vercel.app') || 
+      normalizedOrigin.startsWith('http://localhost:')
+    ) {
       return callback(null, true);
     }
+    
     callback(new Error(`CORS: Origin ${origin} not allowed`));
   },
   credentials: true
