@@ -12,7 +12,8 @@ const {
   startTestForStudents,
   stopTestForStudents,
   startExamForBatch,
-  stopExamForBatch
+  stopExamForBatch,
+  deleteStudents
 } = require('../Controllers/adminController');
 const { authUser, authAdmin } = require('../middleware/auth');
 
@@ -21,6 +22,7 @@ router.get('/stats', authUser, authAdmin, getDashboardStats);
 router.get('/students', authUser, authAdmin, getStudentSubmissions);
 router.post('/students/:id/reset', authUser, authAdmin, resetStudentTest);
 router.post('/students/:id/remove-batch', authUser, authAdmin, removeStudentFromBatch);
+router.delete('/students', authUser, authAdmin, deleteStudents);
 
 // Batch & Group Test controls
 router.get('/batches', authUser, authAdmin, getBatches);

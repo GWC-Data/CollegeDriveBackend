@@ -2,6 +2,23 @@ const Student = require('../Models/Student');
 const Question = require('../Models/Question');
 const Batch = require('../Models/Batch');
 
+// @desc    Delete multiple students
+// @route   DELETE /api/admin/students
+// @access  Private/Admin
+const deleteStudents = async (req, res) => {
+  try {
+    const { studentIds } = req.body;
+    if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+      return res.status(400).json({ message: 'Please provide an array of student IDs to delete' });
+    }
+    const result = await Student.deleteMany({ _id: { $in: studentIds } });
+    res.json({ message: `Successfully deleted ${result.deletedCount} students` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while deleting students' });
+  }
+};
+
 // @desc    Get Admin Dashboard Stats
 // @route   GET /api/admin/stats
 // @access  Private/Admin
@@ -322,5 +339,6 @@ module.exports = {
   startTestForStudents,
   stopTestForStudents,
   startExamForBatch,
-  stopExamForBatch
+  stopExamForBatch,
+  deleteStudents
 };
