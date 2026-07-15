@@ -26,7 +26,7 @@ const configRouter = require('./src/Routers/configRouter');
 const adminRouter = require('./src/Routers/adminRouter');
 
 const app = express();
-const PORT = process.env.port || process.env.PORT || 5000;
+const PORT = process.env.port || process.env.PORT || 8080;
 
 // Connect to Database
 connectDB();
