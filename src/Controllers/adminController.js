@@ -1,6 +1,7 @@
 const Student = require('../Models/Student');
 const Question = require('../Models/Question');
 const Batch = require('../Models/Batch');
+const Counter = require('../Models/Counter');
 
 // @desc    Delete multiple students
 // @route   DELETE /api/admin/students
@@ -16,6 +17,20 @@ const deleteStudents = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error while deleting students' });
+  }
+};
+
+// @desc    Clear ALL students and reset sequence
+// @route   DELETE /api/admin/students/clear-all
+// @access  Private/Admin
+const deleteAllStudents = async (req, res) => {
+  try {
+    const result = await Student.deleteMany({});
+    await Counter.deleteOne({ name: 'studentId' });
+    res.json({ message: `Successfully deleted all ${result.deletedCount} students and reset ID sequence.` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while clearing all students' });
   }
 };
 
@@ -340,5 +355,6 @@ module.exports = {
   stopTestForStudents,
   startExamForBatch,
   stopExamForBatch,
-  deleteStudents
+  deleteStudents,
+  deleteAllStudents
 };
