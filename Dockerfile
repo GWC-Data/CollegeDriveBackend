@@ -14,8 +14,8 @@ RUN npm ci
 COPY . .
 
 
-# Expose backend port
-EXPOSE 5000
+# Expose backend port (GCP defaults to 8080)
+EXPOSE 8080
 
 # Set production environment
 ENV NODE_ENV=production
