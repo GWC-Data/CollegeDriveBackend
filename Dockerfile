@@ -1,20 +1,24 @@
-# Backend/Dockerfile
+# Use Node.js 20 Alpine image
 FROM node:20-alpine
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production
+# Install production dependencies
+RUN npm ci
 
-# Copy the rest of the backend source code
+# Copy application source
 COPY . .
 
-# Expose the port the app runs on (defaults to 5000 in index.js)
+
+# Expose backend port
 EXPOSE 5000
 
+# Set production environment
+ENV NODE_ENV=production
+
 # Start the application
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
