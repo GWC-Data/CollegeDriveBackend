@@ -1,0 +1,54 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: gwc-poc
+  REGION: asia-south1
+  SERVICE: college-drive-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-south1-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker build -t asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE:$GITHUB_SHA .
+
+      - name: Push Docker Image
+        run: |
+          docker push asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE:$GITHUB_SHA
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE \
+          --image asia-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE:$GITHUB_SHA \
+          --region $REGION \
+          --platform managed \
+          --allow-unauthenticated \
+          --cpu 1 \
+          --memory 4Gi \
+          --min-instances 1 \
+          --max-instances 4
