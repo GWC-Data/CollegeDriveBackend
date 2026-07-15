@@ -22,18 +22,19 @@ const shuffleArray = (array) => {
   return arr;
 };
 
-// Generate a cryptographically secure random password
-const generatePassword = () => crypto.randomBytes(8).toString('hex');
-
 // @desc    Register Student
 // @route   POST /api/students/register
 // @access  Public
 const registerStudent = async (req, res) => {
   try {
-    const { name, email, phone, usn, collegeName } = req.body;
+    const { name, email, phone, usn, collegeName, password } = req.body;
 
-    if (!name || !email || !phone || !usn || !collegeName) {
+    if (!name || !email || !phone || !usn || !collegeName || !password) {
       return res.status(400).json({ message: 'All registration fields are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
 
     // Basic email format check
@@ -69,9 +70,6 @@ const registerStudent = async (req, res) => {
     const currentYear = new Date().getFullYear();
     const studentId = `GWC-${currentYear}-${seqStr}`;
 
-    // Cryptographically secure random password
-    const plainPassword = generatePassword();
-
     // Assign set (A, B, C, D) round-robin
     const sets = ['A', 'B', 'C', 'D'];
     const assignedSet = sets[counter.seq % sets.length];
@@ -83,7 +81,7 @@ const registerStudent = async (req, res) => {
       phone: cleanPhone,
       usn: usn.trim().toUpperCase(),
       collegeName: collegeName.trim(),
-      password: plainPassword, // Will be hashed via pre-save hook
+      password: password, // Will be hashed via pre-save hook
       assignedSet
     });
 
@@ -94,8 +92,7 @@ const registerStudent = async (req, res) => {
       message: 'Registration successful',
       credentials: {
         studentId,
-        email: student.email,
-        plainPassword
+        email: student.email
       }
     });
   } catch (err) {
