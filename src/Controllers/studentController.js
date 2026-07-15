@@ -190,18 +190,17 @@ const startTest = async (req, res) => {
     let shuffleOptions = true;
     let totalQuestionsToServe = 30;
 
+    const globalConfig = await SystemConfig.findOne();
+    const systemTestActive = globalConfig ? globalConfig.testActive : true;
+    shuffleQuestions = globalConfig ? globalConfig.shuffleQuestions : true;
+    shuffleOptions = globalConfig ? globalConfig.shuffleOptions : true;
+    totalQuestionsToServe = globalConfig ? (globalConfig.totalQuestionsToServe || 30) : 30;
+
     const batchConfig = await Batch.findOne({ name: student.batch });
     if (batchConfig) {
       testActive = batchConfig.testActive;
-      shuffleQuestions = batchConfig.shuffleQuestions;
-      shuffleOptions = batchConfig.shuffleOptions;
-      totalQuestionsToServe = batchConfig.totalQuestionsToServe || 30;
     } else {
-      const globalConfig = await SystemConfig.findOne();
-      testActive = globalConfig ? globalConfig.testActive : true;
-      shuffleQuestions = globalConfig ? globalConfig.shuffleQuestions : true;
-      shuffleOptions = globalConfig ? globalConfig.shuffleOptions : true;
-      totalQuestionsToServe = globalConfig ? (globalConfig.totalQuestionsToServe || 30) : 30;
+      testActive = systemTestActive;
     }
 
     if (!testActive) {

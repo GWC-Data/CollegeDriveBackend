@@ -150,7 +150,7 @@ const seedDatabase = async () => {
 };
 
 // Start Server
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
   await seedDatabase();
 });
