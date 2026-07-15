@@ -35,8 +35,8 @@ connectDB();
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   process.env.FRONTEND_URL_ALT,
-  'https://college-drive-frontend.vercel.app',
-  'https://college-drive-frontend.vercel.app/'
+  'https://college-drive-462434048008.asia-south1.run.app/',
+
 ].filter(Boolean).map(url => url.replace(/\/$/, '')); // normalize by removing trailing slash
 
 app.use(helmet());
@@ -46,15 +46,15 @@ app.use(cors({
     if (!origin) return callback(null, true);
     // Normalize origin to compare
     const normalizedOrigin = origin.replace(/\/$/, '');
-    
+
     if (
-      allowedOrigins.includes(normalizedOrigin) || 
-      normalizedOrigin.endsWith('.vercel.app') || 
+      allowedOrigins.includes(normalizedOrigin) ||
+      normalizedOrigin.endsWith('.vercel.app') ||
       normalizedOrigin.startsWith('http://localhost:')
     ) {
       return callback(null, true);
     }
-    
+
     callback(new Error(`CORS: Origin ${origin} not allowed`));
   },
   credentials: true
