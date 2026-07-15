@@ -72,6 +72,11 @@ app.use(compression());
 // Trust the reverse proxy (Render) so rate limiters see the real client IPs
 app.set('trust proxy', 1);
 
+// Root Endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'College Drive API is running successfully.' });
+});
+
 // General Rate Limiter
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -97,10 +102,7 @@ app.use('/api/questions', questionRouter);
 app.use('/api/config', configRouter);
 app.use('/api/admin', adminRouter);
 
-// Root Endpoint
-app.get('/', (req, res) => {
-  res.json({ message: 'College Drive API is running successfully.' });
-});
+
 
 // Global Error Handler
 app.use((err, req, res, next) => {
