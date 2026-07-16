@@ -78,12 +78,12 @@ app.get('/', (req, res) => {
 });
 
 // General Rate Limiter
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // limit each IP to 300 requests per windowMs
-  message: { message: 'Too many requests from this IP, please try again after 15 minutes.' }
-});
-app.use('/api/', generalLimiter);
+// const generalLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 300, // limit each IP to 300 requests per windowMs
+//   message: { message: 'Too many requests from this IP, please try again after 15 minutes.' }
+// });
+// app.use('/api/', generalLimiter);
 
 // No auth rate limiting — students and admins can login freely
 
