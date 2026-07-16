@@ -85,15 +85,7 @@ const generalLimiter = rateLimit({
 });
 app.use('/api/', generalLimiter);
 
-// Tighter Rate Limiter for Login only (brute-force protection)
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // limit each IP to 30 login attempts per 15 minutes
-  message: { message: 'Too many login attempts from this IP, please try again after 15 minutes.' }
-});
-app.use('/api/users/login', authLimiter);
-app.use('/api/students/login', authLimiter);
-// NOTE: /api/students/register has NO rate limit so students on shared WiFi can register freely
+// No auth rate limiting — students and admins can login freely
 
 // Mount API Routers
 app.use('/api/users', userRouter);
