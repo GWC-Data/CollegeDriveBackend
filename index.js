@@ -85,15 +85,15 @@ const generalLimiter = rateLimit({
 });
 app.use('/api/', generalLimiter);
 
-// Tighter Rate Limiter for Authentication / Registration (C-05)
+// Tighter Rate Limiter for Login only (brute-force protection)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15, // limit each IP to 15 login/register requests per 15 minutes
-  message: { message: 'Too many login attempts or registrations from this IP, please try again after 15 minutes.' }
+  max: 30, // limit each IP to 30 login attempts per 15 minutes
+  message: { message: 'Too many login attempts from this IP, please try again after 15 minutes.' }
 });
 app.use('/api/users/login', authLimiter);
 app.use('/api/students/login', authLimiter);
-app.use('/api/students/register', authLimiter);
+// NOTE: /api/students/register has NO rate limit so students on shared WiFi can register freely
 
 // Mount API Routers
 app.use('/api/users', userRouter);
