@@ -27,6 +27,12 @@ const shuffleArray = (array) => {
 // @access  Public
 const registerStudent = async (req, res) => {
   try {
+    // Check if registrations are open
+    const config = await SystemConfig.findOne();
+    if (config && !config.isRegistrationOpen) {
+      return res.status(403).json({ message: 'Registrations are currently closed.' });
+    }
+
     const { name, email, phone, usn, collegeName, password } = req.body;
 
     if (!name || !email || !phone || !usn || !collegeName || !password) {

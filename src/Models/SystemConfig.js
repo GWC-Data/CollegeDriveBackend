@@ -20,6 +20,10 @@ const SystemConfigSchema = new mongoose.Schema({
   testDuration: {
     type: Number,
     default: 15 // Default 15 minutes
+  },
+  isRegistrationOpen: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
